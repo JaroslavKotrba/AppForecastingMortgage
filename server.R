@@ -22,7 +22,7 @@ server <- function(input, output){
   })
   
   make_result <- function(x, y, z) {as.numeric(x)*(1-as.numeric(y))^as.numeric(z)}
-  output$mortgage_inflation <- renderText({paste0("Mortgage amount after ", input$year, " years: ", round(make_result(input$mortgage, input$inflation, input$year), 2), " CZK")
+  output$mortgage_inflation <- renderText({paste0("Amount in ", input$year, " years: ", round(make_result((input$mortgage*(input$i.m/12)*(1+(input$i.m/12))^(12*as.numeric(input$year)))/((1+(input$i.m/12))^(12*as.numeric(input$year))-1)*(as.numeric(input$year)*12), input$inflation, input$year), 2), " CZK")
   })
   
   output$plotly <- renderPlotly({
