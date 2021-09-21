@@ -2,7 +2,7 @@
 server <- function(input, output){
   
   output$payment_per_month <- renderText({
-    paste0("Mortgage payment per a month: ", round((input$mortgage*(input$i.m/12)*(1+(input$i.m/12))^(12*as.numeric(input$year)))/((1+(input$i.m/12))^(12*as.numeric(input$year))-1),2), " CZK")
+    paste0("Mortgage payment per month: ", round((input$mortgage*(input$i.m/12)*(1+(input$i.m/12))^(12*as.numeric(input$year)))/((1+(input$i.m/12))^(12*as.numeric(input$year))-1),2), " CZK")
   })
   
   output$payment_total <- renderText({
@@ -18,11 +18,15 @@ server <- function(input, output){
   })
   
   output$payment_salary <- renderText({
-    paste0("Should earn netto per a month: ", round((((input$mortgage*(input$i.m/12)*(1+(input$i.m/12))^(12*as.numeric(input$year)))/((1+(input$i.m/12))^(12*as.numeric(input$year))-1)/45)*55) + (input$mortgage*(input$i.m/12)*(1+(input$i.m/12))^(12*as.numeric(input$year)))/((1+(input$i.m/12))^(12*as.numeric(input$year))-1), 2), " CZK")
+    paste0("Should earn netto per month: ", round((((input$mortgage*(input$i.m/12)*(1+(input$i.m/12))^(12*as.numeric(input$year)))/((1+(input$i.m/12))^(12*as.numeric(input$year))-1)/45)*55) + (input$mortgage*(input$i.m/12)*(1+(input$i.m/12))^(12*as.numeric(input$year)))/((1+(input$i.m/12))^(12*as.numeric(input$year))-1), 2), " CZK")
+  })
+  
+  output$payment_part <- renderText({
+    paste0("Should have own: ", round((input$mortgage/80)*20,2), " CZK")
   })
   
   make_result <- function(x, y, z) {as.numeric(x)*(1-as.numeric(y))^as.numeric(z)}
-  output$mortgage_inflation <- renderText({paste0("Amount in ", input$year, " years: ", round(make_result((input$mortgage*(input$i.m/12)*(1+(input$i.m/12))^(12*as.numeric(input$year)))/((1+(input$i.m/12))^(12*as.numeric(input$year))-1)*(as.numeric(input$year)*12), input$inflation, input$year), 2), " CZK")
+  output$mortgage_inflation <- renderText({paste0("Total amount in ", input$year, " years: ", round(make_result((input$mortgage*(input$i.m/12)*(1+(input$i.m/12))^(12*as.numeric(input$year)))/((1+(input$i.m/12))^(12*as.numeric(input$year))-1)*(as.numeric(input$year)*12), input$inflation, input$year), 2), " CZK")
   })
   
   output$plotly <- renderPlotly({
@@ -32,15 +36,16 @@ server <- function(input, output){
     i.m <- input$i.m/12
     H <- input$mortgage
     a <- (H*(i.m)*(1+i.m)^(12*year))/((1+(i.m))^(12*year)-1)
+    options(scipen=999)
     
     ggplot() +
-      geom_point(data = data.frame(x = 0:(year), y = (0:(year))*(12*a)), aes(x,y,color="Total Overall Paid (Total)"), size=0.5) +
-      geom_point(data = data.frame(x = 0:(year), y = (0:(year))*(12*(H/12)/year)), aes(x,y,color="Total Principal Paid (Mortgage)"), size=0.5) +
-      geom_line(data = data.frame(x = 0:(year), y = (a/i.m)*(1 - (1/((1+i.m)^((year:0)*12))))), aes(x,y,color="Principal Remaining"), size=0.5) +
-      geom_line(data = data.frame(x = 0:(year), y = cumsum(a*(1-(1/(1+i.m)^(0:(year*12)))))[seq(1, length(cumsum(a*(1-(1/(1+i.m)^(0:(year*12)))))), 12)]), aes(x,y,color="Total Interest Paid"), size=0.5) +
+      geom_point(data = data.frame(x = 0:(year), y = (0:(year))*(12*a)), aes(x,y,color="Total"), size=0.5) +
+      geom_point(data = data.frame(x = 0:(year), y = (0:(year))*(12*(H/12)/year)), aes(x,y,color="Mortgage"), size=0.5) +
+      geom_line(data = data.frame(x = 0:(year), y = (a/i.m)*(1 - (1/((1+i.m)^((year:0)*12))))), aes(x,y,color="Remaining"), size=0.5) +
+      geom_line(data = data.frame(x = 0:(year), y = cumsum(a*(1-(1/(1+i.m)^(0:(year*12)))))[seq(1, length(cumsum(a*(1-(1/(1+i.m)^(0:(year*12)))))), 12)]), aes(x,y,color="Interest"), size=0.5) +
       ylab("Amount (y)") +
       xlab("Years (x)") +
-      scale_color_manual(name = "", values = c("Total Overall Paid (Total)" = "red", "Total Principal Paid (Mortgage)" = "cornflowerblue", "Principal Remaining" = "#00798c", "Total Interest Paid" = "orange")) +
+      scale_color_manual(name = "", values = c("Total" = "red", "Mortgage" = "cornflowerblue", "Remaining" = "#00798c", "Interest" = "orange")) +
       theme_classic()
   })
   
@@ -128,7 +133,7 @@ server <- function(input, output){
       theme_bw()
   })
   
-  url <- a("https://jaroslavkotrba.com/", href="https://jaroslavkotrba.com/index.html")
+  url <- a("https://jaroslavkotrba.com", href="https://jaroslavkotrba.com/index.html")
   output$link <- renderUI({
     tagList("To see other author’s projects:", url)
   })
