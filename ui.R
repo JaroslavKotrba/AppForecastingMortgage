@@ -1,3 +1,4 @@
+# Libraries
 library(shiny)
 library(shinydashboard)
 library(ggplot2)
@@ -20,7 +21,7 @@ ui <- dashboardPage(
     numericInput(
       inputId = "mortgage",
       label = "Select a mortgage amount:",
-      value = 4000000,
+      value = 3000000,
       min = 0, max = 10000000, step = 100000
     ),
     
@@ -35,7 +36,7 @@ ui <- dashboardPage(
       inputId = "year",
       label = "Select how many years: ",
       choices = c(1:100),
-      selected = 30
+      selected = 15
     ),
     
     numericInput(
@@ -53,7 +54,7 @@ ui <- dashboardPage(
       id = "tab_selected",
       # tab panel number 1
       tabPanel(
-        title = "Mortgage Calculation",
+        title = "Mortgage",
         style="padding-top: 15px",
         h4(strong("Mortgage calculation:"), style="padding-left: 15px"),
         verbatimTextOutput("payment_per_month"),
@@ -61,6 +62,7 @@ ui <- dashboardPage(
         verbatimTextOutput("payment_difference"),
         verbatimTextOutput("payment_more"),
         verbatimTextOutput("payment_salary"),
+        verbatimTextOutput("payment_part"),
         h4(strong("Inflation calculation:"), style="padding-left: 15px"),
         verbatimTextOutput("mortgage_inflation"),
         h4(strong("Your payment:"), style="padding-left: 15px"),
