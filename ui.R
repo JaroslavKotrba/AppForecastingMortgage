@@ -76,11 +76,11 @@ ui <- dashboardPage(
         style="padding-top: 15px",
         h5(strong("Here is the development of the three main rates given by the CNB, the output is directly taken from the main web page of the CNB."), style="padding-left: 15px"),
         h4(strong("Repo rates:"), style="padding-left: 15px"),
-        plotOutput("repo"),
+        plotlyOutput("repo"),
         h4(strong("Discount rates:"), style="padding-left: 15px"),
-        plotOutput("disco"),
+        plotlyOutput("disco"),
         h4(strong("Lombard rates:"), style="padding-left: 15px"),
-        plotOutput("lombard"),
+        plotlyOutput("lombard"),
         p("\n"),
         uiOutput("link2", style="padding-left: 20px")
       )
