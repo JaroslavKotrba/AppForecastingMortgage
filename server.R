@@ -49,7 +49,7 @@ server <- function(input, output){
       theme_classic()
   })
   
-  output$repo <- renderPlot({
+  output$repo <- renderPlotly({
     # Repo rate
     library(rvest)
     library(dplyr)
@@ -77,7 +77,7 @@ server <- function(input, output){
       theme_bw()
   })
   
-  output$disco <- renderPlot({
+  output$disco <- renderPlotly({
     # Discount rate
     library(rvest)
     library(dplyr)
@@ -105,7 +105,7 @@ server <- function(input, output){
       theme_bw()
   })
   
-  output$lombard <- renderPlot({
+  output$lombard <- renderPlotly({
     # Lombard rate
     library(rvest)
     library(dplyr)
